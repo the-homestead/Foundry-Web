@@ -15,9 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Better Auth Starter",
-  description:
-    "Simple starter pack for Better Auth, with Shadcn, Drizzle, and Neon",
+  title: "Foundry",
+  description: "A new space to host anything modding related",
+  icons: "/foundry.png",
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({

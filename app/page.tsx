@@ -11,18 +11,18 @@ export default function Home() {
       </header>
       <div className="flex h-screen flex-col items-center justify-center gap-5 px-5 text-center">
         <Image
-          alt="Better Auth"
-          className="rounded-lg dark:invert"
-          height={100}
-          src="/better-auth-starter.png"
-          width={100}
+          alt="Foundry"
+          className="rounded-lg"
+          height={256}
+          src="/foundry.png"
+          width={256}
         />
 
-        <h1 className="font-bold text-4xl">Better Auth Starter</h1>
+        <h1 className="font-bold text-4xl">Foundry</h1>
 
         <p className="text-lg">
-          This is a starter project for Better Auth. It is a simple project that
-          uses Better Auth to authenticate users.
+          You're place to share your version of the story. A new user first mod
+          repository website.
         </p>
 
         <div className="flex gap-2">

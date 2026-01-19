@@ -11,16 +11,16 @@ export default function LoginPage() {
           className="flex items-center gap-2 self-center font-medium"
           href="/"
         >
-          <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+          <div className="flex size-8 items-center justify-center rounded-md bg-card text-primary-foreground">
             <Image
-              alt="Better Auth Starter Logo"
-              height={50}
+              alt="Foundry"
+              height={64}
               priority
-              src={"/better-auth-starter.png"}
-              width={50}
+              src={"/foundry.png"}
+              width={64}
             />
           </div>
-          Better Auth Starter
+          Foundry - Homestead Systems
         </Link>
         <Suspense>
           <ForgotPasswordForm />

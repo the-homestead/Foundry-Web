@@ -5,7 +5,9 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { IoLogoGithub, IoLogoGoogle } from "react-icons/io";
+import { IoLogoDiscord } from "react-icons/io5";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -28,12 +30,46 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { signUp } from "@/server/users";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const formSchema = z.object({
-  username: z.string().min(3),
-  email: z.string().email(),
-  password: z.string().min(8),
-});
+const formSchema = z
+  .object({
+    username: z
+      .string()
+      .min(3, { message: "Username must be at least 3 characters long." })
+      .max(32, { message: "Username must be at most 32 characters long." }),
+    email: z.email({ message: "Invalid email address." }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long." })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter.",
+      })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter.",
+      })
+      .regex(/[0-9]/, { message: "Password must contain at least one number." })
+      .regex(/[^A-Za-z0-9]/, {
+        message: "Password must contain at least one special character.",
+      }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long." })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter.",
+      })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter.",
+      })
+      .regex(/[0-9]/, { message: "Password must contain at least one number." })
+      .regex(/[^A-Za-z0-9]/, {
+        message: "Password must contain at least one special character.",
+      }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match.",
+    path: ["confirmPassword"], // Set the error on the confirmPassword field
+  });
 
 export function SignupForm({
   className,
@@ -48,6 +84,7 @@ export function SignupForm({
       username: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -57,6 +94,40 @@ export function SignupForm({
       callbackURL: "/dashboard",
     });
   };
+
+  const signInWithDiscord = async () => {
+    await authClient.signIn.social({
+      provider: "discord",
+      callbackURL: "/dashboard",
+    });
+  };
+
+  const signInWithGithub = async () => {
+    await authClient.signIn.social({
+      provider: "github",
+      callbackURL: "/dashboard",
+    });
+  };
+
+  const email = useWatch({
+    name: "email",
+    control: form.control,
+    defaultValue: "",
+  });
+
+  const password = useWatch({
+    name: "password",
+    control: form.control,
+    defaultValue: "",
+  });
+
+  const confirmPassword = useWatch({
+    control: form.control,
+    name: "confirmPassword",
+    defaultValue: "",
+  });
+
+  const isDisabled = !(email && password) || password !== confirmPassword;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -97,14 +168,26 @@ export function SignupForm({
                     type="button"
                     variant="outline"
                   >
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <title>Google</title>
-                      <path
-                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Signup with Google
+                    <IoLogoGoogle />
+                    Signup W/ Google
+                  </Button>
+                  <Button
+                    className="w-full"
+                    onClick={signInWithGithub}
+                    type="button"
+                    variant="outline"
+                  >
+                    <IoLogoGithub />
+                    Signup W/ Github
+                  </Button>
+                  <Button
+                    className="w-full"
+                    onClick={signInWithDiscord}
+                    type="button"
+                    variant="outline"
+                  >
+                    <IoLogoDiscord />
+                    Signup W/ Discord
                   </Button>
                 </div>
                 <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-border after:border-t">
@@ -123,7 +206,11 @@ export function SignupForm({
                           <FormControl>
                             <Input placeholder="shadcn" {...field} />
                           </FormControl>
-                          <FormMessage />
+                          {form.formState.errors.username && (
+                            <FormMessage>
+                              {form.formState.errors.username.message}
+                            </FormMessage>
+                          )}
                         </FormItem>
                       )}
                     />
@@ -137,19 +224,57 @@ export function SignupForm({
                           <FormControl>
                             <Input placeholder="m@example.com" {...field} />
                           </FormControl>
-                          <FormMessage />
+                          {form.formState.errors.email && (
+                            <FormMessage>
+                              {form.formState.errors.email.message}
+                            </FormMessage>
+                          )}
                         </FormItem>
                       )}
                     />
                   </div>
                   <div className="grid gap-3">
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-4">
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="********"
+                                    {...field}
+                                    type="password"
+                                  />
+                                </FormControl>
+                                {form.formState.errors.password && (
+                                  <FormMessage>
+                                    {form.formState.errors.password.message}
+                                  </FormMessage>
+                                )}
+                              </FormItem>
+                            )}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p> Password Rules:</p>
+                          <p> - Must be 8 characters long</p>
+                          <p> - Must contain one uppercase</p>
+                          <p> - Must contain one lowercase</p>
+                          <p> - Must contain one number</p>
+                          <p> - Must contain one special</p>
+                          number
+                        </TooltipContent>
+                      </Tooltip>
                       <FormField
                         control={form.control}
-                        name="password"
+                        name="confirmPassword"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel>Confirm Password</FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="********"
@@ -157,7 +282,11 @@ export function SignupForm({
                                 type="password"
                               />
                             </FormControl>
-                            <FormMessage />
+                            {form.formState.errors.confirmPassword && (
+                              <FormMessage>
+                                {form.formState.errors.confirmPassword.message}
+                              </FormMessage>
+                            )}
                           </FormItem>
                         )}
                       />
@@ -169,7 +298,11 @@ export function SignupForm({
                       </Link>
                     </div>
                   </div>
-                  <Button className="w-full" disabled={isLoading} type="submit">
+                  <Button
+                    className="w-full"
+                    disabled={isLoading || isDisabled}
+                    type="submit"
+                  >
                     {isLoading ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
