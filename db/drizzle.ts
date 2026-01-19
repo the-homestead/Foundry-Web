@@ -1,16 +1,15 @@
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import { schema } from "./schema";
 
-config({ path: ".env" }); // or .env.local
+config({ path: ".env" });
 
-export const db = drizzle(
-  {
-    connection: {
-      connectionString: process.env.DATABASE_URL,
-      ssl: true,
-    },
-    sslmode: "verify-full",
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: true, // same as sslmode=verify-full
   },
-  { schema }
-);
+});
+
+export const db = drizzle(pool, { schema });
