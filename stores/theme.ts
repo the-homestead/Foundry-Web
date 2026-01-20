@@ -27,11 +27,17 @@ export const $theme =
 		: null;
 
 export function setMode(mode: ThemeMode) {
+	if (!$theme) {
+		return;
+	}
 	const current = $theme.get();
 	$theme.set({ ...current, mode });
 }
 
 export function toggleMode() {
+	if (!$theme) {
+		return;
+	}
 	const current = $theme.get();
 	$theme.set({
 		...current,
@@ -40,11 +46,17 @@ export function toggleMode() {
 }
 
 export function setBaseTheme(base: ThemeBase) {
+	if (!$theme) {
+		return;
+	}
 	const current = $theme.get();
 	$theme.set({ ...current, base });
 }
 
 export function setAccent(accent: ThemeAccent | null) {
+	if (!$theme) {
+		return;
+	}
 	const current = $theme.get();
 	$theme.set({ ...current, accent });
 }
