@@ -1,12 +1,14 @@
 "use client";
 
 import createGlobe from "cobe";
-import { Download, Flame, Shield } from "lucide-react";
+import { Download, Shield } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import type React from "react";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { FadeUp } from "./Animations/fadeup";
+import { TrendingModCard } from "./trending-mod-card";
 
 /* ---------------- Mock API Data ---------------- */
 
@@ -17,7 +19,7 @@ const trendingMods = [
 		author: "Railfunner",
 		game: "Minecraft",
 		downloads: 4_823_112,
-		icon: "/logos/Minecraft/minecraft.svg",
+		image: "/logos/Minecraft/minecraft.svg",
 	},
 	{
 		id: "2",
@@ -25,7 +27,7 @@ const trendingMods = [
 		author: "LunaDev",
 		game: "Hytale",
 		downloads: 913_221,
-		icon: "/logos/Hytale/Hytale-Logo-Illustrated-HOnly.png",
+		image: "/logos/Hytale/Hytale-Logo-Illustrated-HOnly.png",
 	},
 	{
 		id: "3",
@@ -33,7 +35,7 @@ const trendingMods = [
 		author: "Skjor",
 		game: "Skyrim SE",
 		downloads: 3_029_187,
-		icon: "/logos/SkyrimSE/skyrim.png",
+		image: "/logos/SkyrimSE/skyrim.png",
 	},
 	{
 		id: "4",
@@ -41,7 +43,7 @@ const trendingMods = [
 		author: "Ashfall",
 		game: "Fallout 4",
 		downloads: 1_892_211,
-		icon: "/logos/Fallout4/ae-hero-logo.png",
+		image: "/logos/Fallout4/ae-hero-logo.png",
 	},
 ];
 
@@ -86,45 +88,39 @@ export function FeaturesSection() {
 		<div className="relative z-20 mx-auto max-w-7xl py-16">
 			{/* Trending Mods */}
 			<div className="mb-16 px-6">
-				<div className="mb-6 flex items-center gap-2">
-					<Flame className="h-5 w-5 text-primary" />
-					<h3 className="font-semibold text-xl tracking-tight">
-						Trending Mods
-					</h3>
-				</div>
+				<section className="mt-20 w-full max-w-6xl px-2">
+					<FadeUp>
+						<h2 className="mb-6 text-center font-bold text-2xl sm:text-3xl">
+							Trending Mods
+						</h2>
+					</FadeUp>
 
-				<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-					{trendingMods.map((mod) => (
-						<motion.div
-							className="group flex flex-col gap-3 rounded-xl border bg-background p-4 shadow-sm transition-colors hover:bg-muted/40"
-							key={mod.id}
-							whileHover={{ y: -4, scale: 1.02 }}
-						>
-							<div className="flex items-center gap-3">
-								<Image
-									alt={mod.name}
-									className="rounded-md"
-									height={48}
-									src={mod.icon}
-									width={48}
-								/>
-								<div className="min-w-0">
-									<p className="truncate font-medium text-sm">
-										{mod.name}
-									</p>
-									<p className="truncate text-muted-foreground text-xs">
-										by {mod.author}
-									</p>
-								</div>
-							</div>
-
-							<div className="mt-auto flex items-center justify-between text-muted-foreground text-xs">
-								<span>{mod.game}</span>
-								<span>{mod.downloads.toLocaleString()} dl</span>
-							</div>
-						</motion.div>
-					))}
-				</div>
+					<motion.div
+						animate="show"
+						className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+						initial="hidden"
+						variants={{
+							hidden: {},
+							show: {
+								transition: { staggerChildren: 0.08 },
+							},
+						}}
+					>
+						{trendingMods.map((mod) => (
+							<motion.div
+								className="h-full"
+								key={mod.id}
+								transition={{ duration: 0.4, ease: "easeOut" }}
+								variants={{
+									hidden: { opacity: 0, y: 20 },
+									show: { opacity: 1, y: 0 },
+								}}
+							>
+								<TrendingModCard mod={mod} />
+							</motion.div>
+						))}
+					</motion.div>
+				</section>
 			</div>
 
 			{/* Headline */}
@@ -227,7 +223,7 @@ const SkeletonVersions = () => {
 	];
 
 	return (
-		<div className="relative mt-4 flex h-full flex-col gap-4 rounded-xl border bg-gradient-to-br from-muted/40 to-muted/10 p-4 shadow-sm">
+		<div className="relative mt-4 flex h-full flex-col gap-4 rounded-xl border bg-gradient-to-br from-muted/50 to-muted/10 p-4 shadow-sm">
 			{/* Header */}
 			<div className="flex items-center gap-3">
 				<Image
@@ -254,7 +250,7 @@ const SkeletonVersions = () => {
 				{versions.map((v) => (
 					<div
 						className={cn(
-							"group flex flex-col gap-2 rounded-lg border bg-background p-3 transition-colors hover:bg-muted/40",
+							"group flex flex-col gap-2 rounded-lg border bg-background/70 p-3 transition-all hover:bg-muted/40 hover:shadow-sm",
 							v.latest && "border-primary/40 bg-primary/5"
 						)}
 						key={v.version}

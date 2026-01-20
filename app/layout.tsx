@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 import type { Metadata } from "next";
+import { CustomThemeProvider } from "@/components/custom-theme-provider";
 
 export const metadata: Metadata = {
 	title: {
@@ -126,6 +127,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 					enableSystem
 				>
+					<CustomThemeProvider />
 					{children}
 					<Toaster />
 				</ThemeProvider>
