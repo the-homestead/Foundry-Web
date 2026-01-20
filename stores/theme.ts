@@ -16,8 +16,8 @@ export const $theme =
 				"ui:theme",
 				{
 					mode: "dark",
-					base: "latte",
-					accent: "latte", // must match ACCENT_ALLOWED
+					base: "mocha",
+					accent: "mauve", // must match ACCENT_ALLOWED
 				},
 				{
 					encode: JSON.stringify,
