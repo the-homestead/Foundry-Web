@@ -10,18 +10,21 @@ export interface ThemeState {
 	accent: ThemeAccent | null;
 }
 
-export const $theme = persistentAtom<ThemeState>(
-	"ui:theme",
-	{
-		mode: "dark",
-		base: "latte",
-		accent: "mauve",
-	},
-	{
-		encode: JSON.stringify,
-		decode: JSON.parse,
-	}
-);
+export const $theme =
+	typeof window !== "undefined"
+		? persistentAtom<ThemeState>(
+				"ui:theme",
+				{
+					mode: "dark",
+					base: "latte",
+					accent: "latte", // must match ACCENT_ALLOWED
+				},
+				{
+					encode: JSON.stringify,
+					decode: JSON.parse,
+				}
+			)
+		: null;
 
 export function setMode(mode: ThemeMode) {
 	const current = $theme.get();

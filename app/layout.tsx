@@ -17,6 +17,7 @@ import type { Metadata } from "next";
 import { CustomThemeProvider } from "@/components/custom-theme-provider";
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://foundry.homestead.systems/"),
 	title: {
 		default: "Foundry",
 		template: "%s • Foundry",
@@ -74,11 +75,6 @@ export const metadata: Metadata = {
 	/* ---------------- PWA ---------------- */
 
 	manifest: "/site.webmanifest",
-
-	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "#ffffff" },
-		{ media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-	],
 
 	/* ---------------- Open Graph ---------------- */
 

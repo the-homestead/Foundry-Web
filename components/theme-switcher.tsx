@@ -1,4 +1,3 @@
-// components/theme-switcher.tsx
 "use client";
 
 import { useStore } from "@nanostores/react";
@@ -28,13 +27,14 @@ export default function ThemeSwitcher({
 }: {
 	children: React.ReactNode;
 }) {
-	const theme = useStore($theme);
+	// biome-ignore lint/correctness/useHookAtTopLevel:SSR
+	const theme = $theme ? useStore($theme) : null;
 
 	const isCatppuccin =
-		theme.base === "latte" ||
-		theme.base === "frappe" ||
-		theme.base === "macchiato" ||
-		theme.base === "mocha";
+		theme?.base === "latte" ||
+		theme?.base === "frappe" ||
+		theme?.base === "macchiato" ||
+		theme?.base === "mocha";
 
 	return (
 		<ContextMenu>
@@ -47,13 +47,13 @@ export default function ThemeSwitcher({
 				<ContextMenuItem onClick={() => setMode("light")}>
 					<Sun className="mr-2 h-4 w-4" />
 					<span className="flex-1">Light</span>
-					{theme.mode === "light" && <Check className="h-4 w-4" />}
+					{theme?.mode === "light" && <Check className="h-4 w-4" />}
 				</ContextMenuItem>
 
 				<ContextMenuItem onClick={() => setMode("dark")}>
 					<Moon className="mr-2 h-4 w-4" />
 					<span className="flex-1">Dark</span>
-					{theme.mode === "dark" && <Check className="h-4 w-4" />}
+					{theme?.mode === "dark" && <Check className="h-4 w-4" />}
 				</ContextMenuItem>
 
 				{/* Optional: quick toggle */}
@@ -68,7 +68,7 @@ export default function ThemeSwitcher({
 
 				<ContextMenuItem onClick={() => setBaseTheme("default")}>
 					<span className="flex-1">Default</span>
-					{theme.base === "default" && <Check className="h-4 w-4" />}
+					{theme?.base === "default" && <Check className="h-4 w-4" />}
 				</ContextMenuItem>
 
 				{BASE_THEMES.map((t) => (
@@ -77,7 +77,7 @@ export default function ThemeSwitcher({
 						onClick={() => setBaseTheme(t.value)}
 					>
 						<span className="flex-1">{t.label}</span>
-						{theme.base === t.value && (
+						{theme?.base === t.value && (
 							<Check className="h-4 w-4" />
 						)}
 					</ContextMenuItem>
@@ -97,7 +97,7 @@ export default function ThemeSwitcher({
 									onClick={() => setAccent(null)}
 								>
 									<span className="flex-1">Default</span>
-									{!theme.accent && (
+									{!theme?.accent && (
 										<Check className="h-4 w-4" />
 									)}
 								</ContextMenuItem>
@@ -110,7 +110,7 @@ export default function ThemeSwitcher({
 										<span className="flex-1 capitalize">
 											{accent}
 										</span>
-										{theme.accent === accent && (
+										{theme?.accent === accent && (
 											<Check className="h-4 w-4" />
 										)}
 									</ContextMenuItem>
