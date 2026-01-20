@@ -40,7 +40,7 @@ export function CustomThemeProvider() {
 		];
 		for (const cls of [...root.classList]) {
 			if (
-				THEME_PREFIXES.some((p) => cls.startsWith(cls)) ||
+				THEME_PREFIXES.some((_p) => cls.startsWith(cls)) ||
 				cls === "one"
 			) {
 				root.classList.remove(cls);
