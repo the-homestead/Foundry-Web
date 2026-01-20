@@ -1,6 +1,10 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["ultracite/core", "ultracite/next", "ultracite/react"],
+  "formatter": {
+    "indentStyle": "tab",
+    "indentWidth": 4
+  },
   "files": {
     "includes": [
       "!public",

@@ -2,15 +2,15 @@ import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
-  const sessionCookie = await getSessionCookie(request);
+	const sessionCookie = await getSessionCookie(request);
 
-  if (!sessionCookie) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+	if (!sessionCookie) {
+		return NextResponse.redirect(new URL("/", request.url));
+	}
 
-  return NextResponse.next();
+	return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard"],
+	matcher: ["/dashboard"],
 };
